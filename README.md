@@ -8,7 +8,7 @@ Getting Started
 Installation :
 
 ```
-$ composer require tripteki/laravelphp-acl
+composer require tripteki/laravelphp-acl
 ```
 
 How to use it :
@@ -48,7 +48,7 @@ php artisan vendor:publish --tag=tripteki-laravelphp-acl-migrations
 - Migrate.
 
 ```
-$ php artisan migrate
+php artisan migrate
 ```
 
 - Emit Event-Listener.
