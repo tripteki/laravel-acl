@@ -15,21 +15,28 @@ class AccessResource extends JsonResource
     public function toArray($request)
     {
         $accesses = explode(".", $this->resource["name"]);
-        $resources = explode(",", $accesses[0]);
-        $actions = explode(",", $accesses[1]);
-        $targets = explode(",", $accesses[2]);
+        $resources = @explode(",", $accesses[0]);
+        $actions = @explode(",", $accesses[1]);
+        $targets = @explode(",", $accesses[2]);
 
         $ables = [];
 
-        foreach ($resources as $resource) {
+        if (! empty($resources) && ! empty($actions) && ! empty($targets)) {
 
-            foreach ($actions as $action) {
+            foreach ($resources as $resource) {
 
-                foreach ($targets as $target) {
+                foreach ($actions as $action) {
 
-                    $ables[$resource][$target][$this->resource["id"]][] = $action;
+                    foreach ($targets as $target) {
+
+                        $ables[$resource][$target][$this->resource["id"]][] = $action;
+                    }
                 }
             }
+
+        } else {
+
+            $ables[$this->resource["id"]] = $this->resource["name"];
         }
 
         return $ables;
