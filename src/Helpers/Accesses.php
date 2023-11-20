@@ -10,9 +10,10 @@ if (! function_exists("accesses"))
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model|null $user
+     * @param bool $withOwn
      * @return array
      */
-    function accesses(\Illuminate\Database\Eloquent\Model|null $user = null)
+    function accesses(\Illuminate\Database\Eloquent\Model|null $user = null, $withOwn = true)
     {
         $accesses = [];
 
@@ -33,7 +34,8 @@ if (! function_exists("accesses"))
 
         if ($repository->getUser() instanceof $class && in_array(RolePermissionTrait::class, class_uses($class))) {
 
-            $accesses = array_merge($repository->permissions()->toArray(), $repository->owns()->toArray());
+            if ($withOwn) $accesses = array_merge($repository->permissions()->toArray(), $repository->owns()->toArray());
+            else $accesses = $repository->permissions()->toArray();
         }
 
         return AccessResource::collection($accesses)->resolve();
