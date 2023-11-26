@@ -101,8 +101,7 @@ class CreateRolesPermissionsTable extends Migration
             else if ($keytype == "string") $table->uuid($columnNames["model_morph_key"]);
 
             $table->index([ $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_model_id_model_type_index");
-            if ($keytype == "int") $table->foreignId(PermissionRegistrar::$pivotPermission)->constrained($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
-            else if ($keytype == "string") $table->foreignUuid(PermissionRegistrar::$pivotPermission)->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid(PermissionRegistrar::$pivotPermission)->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
 
             if ($teams) {
 
@@ -124,8 +123,7 @@ class CreateRolesPermissionsTable extends Migration
             else if ($keytype == "string") $table->uuid($columnNames["model_morph_key"]);
 
             $table->index([ $columnNames["model_morph_key"], "model_type", ], "model_has_roles_model_id_model_type_index");
-            if ($keytype == "int") $table->foreignId(PermissionRegistrar::$pivotRole)->constrained($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
-            else if ($keytype == "string") $table->foreignUuid(PermissionRegistrar::$pivotRole)->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid(PermissionRegistrar::$pivotRole)->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
 
             if ($teams) {
 
