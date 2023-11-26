@@ -139,19 +139,8 @@ class CreateRolesPermissionsTable extends Migration
 
         Schema::create($tableNames["role_has_permissions"], function (Blueprint $table) use ($keytype, $tableNames) {
 
-            if ($keytype == "int") {
-
-                $table->unsignedBigInteger(PermissionRegistrar::$pivotPermission);
-                $table->unsignedBigInteger(PermissionRegistrar::$pivotRole);
-
-            } else if ($keytype == "string") {
-
-                $table->uuid(PermissionRegistrar::$pivotPermission);
-                $table->uuid(PermissionRegistrar::$pivotRole);
-            }
-
-            $table->foreign(PermissionRegistrar::$pivotPermission, "acl_role_has_permissions_permission_id_foreign")->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
-            $table->foreign(PermissionRegistrar::$pivotRole, "acl_role_has_permissions_role_id_foreign")->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid(PermissionRegistrar::$pivotPermission, "acl_role_has_permissions_permission_id_foreign")->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid(PermissionRegistrar::$pivotRole, "acl_role_has_permissions_role_id_foreign")->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
 
             $table->primary([ PermissionRegistrar::$pivotPermission, PermissionRegistrar::$pivotRole, ], "role_has_permissions_permission_id_role_id_primary");
         });
