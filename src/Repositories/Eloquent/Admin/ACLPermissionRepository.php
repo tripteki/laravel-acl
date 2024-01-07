@@ -28,7 +28,7 @@ class ACLPermissionRepository implements IACLPermissionRepository
 
         $content = QueryBuilder::for(app(PermissionModel::class)->query());
 
-        if (! Auth::check() || ! Auth::user()->hasRole(ACLServiceProvider::SUPERUSER)) {
+        if (! Auth::check() || ! Auth::user()->hasRole(ACLServiceProvider::$SUPERADMIN)) {
 
             $content = $content->whereNot("name", "like", "%models%");
         }

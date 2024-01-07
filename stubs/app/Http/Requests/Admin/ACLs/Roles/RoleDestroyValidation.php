@@ -33,7 +33,7 @@ class RoleDestroyValidation extends FormValidation
     {
         return [
 
-            "role" => "required|string|not_regex:/^".ACLServiceProvider::SUPERUSER."$/|exists:".config("permission.models.role").",name",
+            "role" => "required|string|not_regex:/^".ACLServiceProvider::$SUPERADMIN."$/|exists:".config("permission.models.role").",name",
         ];
     }
 };

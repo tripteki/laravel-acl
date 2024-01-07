@@ -32,7 +32,7 @@ class PermissionShowValidation extends FormValidation
      */
     public function rules()
     {
-        $ownable = Auth::check() && Auth::user()->hasRole(ACLServiceProvider::SUPERUSER) ? "|" : "|not_regex:/models/|";
+        $ownable = Auth::check() && Auth::user()->hasRole(ACLServiceProvider::$SUPERADMIN) ? "|" : "|not_regex:/models/|";
 
         return [
 

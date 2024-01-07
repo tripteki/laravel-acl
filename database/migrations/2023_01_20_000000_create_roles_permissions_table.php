@@ -147,7 +147,7 @@ class CreateRolesPermissionsTable extends Migration
 
         app("cache")->store(config("permission.cache.store") != "default" ? config("permission.cache.store") : null)->forget(config("permission.cache.key"));
 
-        $this->role->rule(ACLServiceProvider::SUPERUSER);
+        $this->role->rule(ACLServiceProvider::$SUPERADMIN);
     }
 
     /**

@@ -31,7 +31,12 @@ class ACLServiceProvider extends ServiceProvider
     /**
      * @var string
      */
-    public const SUPERUSER = "superuser";
+    public static $SUPERADMIN = "superadmin";
+
+    /**
+     * @var string
+     */
+    public static $SUPERUSER = "superuser";
 
     /**
      * @var bool
@@ -98,12 +103,12 @@ class ACLServiceProvider extends ServiceProvider
     {
         Gate::before(function ($user, $ability) {
 
-            return $user->hasRole(ACLServiceProvider::SUPERUSER) ? true : null;
+            return $user->hasRole(ACLServiceProvider::$SUPERADMIN) ? true : null;
         });
 
         // Gate::after(function ($user, $ability) { //
 
-            // return $user->hasRole(ACLServiceProvider::SUPERUSER); //
+            // return $user->hasRole(ACLServiceProvider::$SUPERADMIN); //
         // }); //
     }
 
