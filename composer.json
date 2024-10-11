@@ -1,6 +1,6 @@
 {
     "name": "tripteki/laravelphp-acl",
-    "version": "1.1.8",
+    "version": "2.0.0",
     "description": "Trip Teknologi's Laravel.php ACLs",
 
     "readme": "README.md",
@@ -19,7 +19,7 @@
         "tripteki/laravelphp-import-export": "^1.0.0",
         "tripteki/laravelphp-request-response-query": "^1.0.0",
 
-        "spatie/laravel-permission": "^5.8.0"
+        "spatie/laravel-permission": "^6.9.0"
     },
 
     "require-dev": {},
