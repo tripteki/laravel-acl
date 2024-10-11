@@ -194,10 +194,12 @@ class ACLRepository extends AbstractRepository implements IACLRepository
     }
 
     /**
+     * @param string $resource
+     * @param int|string $target
      * @return \Illuminate\Support\Collection
      */
-    public function owns()
+    public function owns($resource = "%", $target = "%")
     {
-        return $this->user->getDirectPermissions();
+        return $resource === "%" ? $this->user->getDirectPermissions() : $this->user->getDirectPermissions()->whereLike("name", iacl($resource, "%", $target));
     }
 };

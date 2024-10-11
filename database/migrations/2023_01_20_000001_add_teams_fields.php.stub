@@ -9,6 +9,19 @@ use Spatie\Permission\PermissionRegistrar;
 class AddTeamsFields extends Migration
 {
     /**
+     * @var \Spatie\Permission\PermissionRegistrar
+     */
+    protected $registrar;
+
+    /**
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->registrar = app(PermissionRegistrar::class);
+    }
+
+    /**
      * @return void
      */
     public function up()
@@ -52,15 +65,15 @@ class AddTeamsFields extends Migration
 
                 if (DB::getDriverName() !== "sqlite") {
 
-                    $table->dropForeign([ PermissionRegistrar::$pivotPermission, ]);
+                    $table->dropForeign([ $this->registrar->pivotPermission, ]);
                 }
 
                 $table->dropPrimary();
-                $table->primary([ $columnNames["team_foreign_key"], PermissionRegistrar::$pivotPermission, $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_permission_model_type_primary");
+                $table->primary([ $columnNames["team_foreign_key"], $this->registrar->pivotPermission, $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_permission_model_type_primary");
 
                 if (DB::getDriverName() !== "sqlite") {
 
-                    $table->foreignUuid(PermissionRegistrar::$pivotPermission)->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
+                    $table->foreignUuid($this->registrar->pivotPermission)->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
                 }
             });
         }
@@ -74,15 +87,15 @@ class AddTeamsFields extends Migration
 
                 if (DB::getDriverName() !== "sqlite") {
 
-                    $table->dropForeign([ PermissionRegistrar::$pivotRole, ]);
+                    $table->dropForeign([ $this->registrar->pivotRole, ]);
                 }
 
                 $table->dropPrimary();
-                $table->primary([ $columnNames["team_foreign_key"], PermissionRegistrar::$pivotRole, $columnNames["model_morph_key"], "model_type", ], "model_has_roles_role_model_type_primary");
+                $table->primary([ $columnNames["team_foreign_key"], $this->registrar->pivotRole, $columnNames["model_morph_key"], "model_type", ], "model_has_roles_role_model_type_primary");
 
                 if (DB::getDriverName() !== "sqlite") {
 
-                    $table->foreignUuid(PermissionRegistrar::$pivotRole)->references("id")->on($tableNames["roles"])->onDelete("cascade");
+                    $table->foreignUuid($this->registrar->pivotRole)->references("id")->on($tableNames["roles"])->onDelete("cascade");
                 }
             });
         }

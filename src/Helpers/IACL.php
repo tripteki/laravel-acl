@@ -11,7 +11,7 @@ if (! function_exists("iacl"))
      * @param int|string $target
      * @return string
      */
-    function iacl($resource, $action, $target)
+    function iacl($resource, $action = "*", $target = "*")
     {
         return OwnScope::space(app($resource)).".".Str::lower($action).".".$target;
     };

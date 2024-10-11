@@ -111,6 +111,7 @@ $repository = app(IACLRepository::class);
 // $repository->grant("posts.update.5"); //
 // $repository->revoke("posts.update.5"); //
 // $repository->owns(); //
+// $repository->owns(\App\Models\Post::class, 5); //
 // $repository->can(iacl(\App\Models\Post::class, "update", 5)); //
 // $repository->can("posts.update.5"); //
 // auth()->user()->can("posts.update.5"); //

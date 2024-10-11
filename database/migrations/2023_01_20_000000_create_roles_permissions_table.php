@@ -27,6 +27,11 @@ class CreateRolesPermissionsTable extends Migration
     protected $permission;
 
     /**
+     * @var \Spatie\Permission\PermissionRegistrar
+     */
+    protected $registrar;
+
+    /**
      * @return void
      */
     public function __construct()
@@ -34,6 +39,7 @@ class CreateRolesPermissionsTable extends Migration
         $this->keytype = app(AuthModelContract::class)->getKeyType();
         $this->role = app(IACLRoleRepository::class);
         $this->permission = app(IACLPermissionRepository::class);
+        $this->registrar = app(PermissionRegistrar::class);
     }
 
     /**
@@ -101,17 +107,17 @@ class CreateRolesPermissionsTable extends Migration
             else if ($keytype == "string") $table->uuid($columnNames["model_morph_key"]);
 
             $table->index([ $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_model_id_model_type_index");
-            $table->foreignUuid(PermissionRegistrar::$pivotPermission)->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid($this->registrar->pivotPermission)->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
 
             if ($teams) {
 
                 $table->unsignedBigInteger($columnNames["team_foreign_key"]);
                 $table->index($columnNames["team_foreign_key"], "model_has_permissions_team_foreign_key_index");
-                $table->primary([ $columnNames["team_foreign_key"], PermissionRegistrar::$pivotPermission, $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_permission_model_type_primary");
+                $table->primary([ $columnNames["team_foreign_key"], $this->registrar->pivotPermission, $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_permission_model_type_primary");
 
             } else {
 
-                $table->primary([ PermissionRegistrar::$pivotPermission, $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_permission_model_type_primary");
+                $table->primary([ $this->registrar->pivotPermission, $columnNames["model_morph_key"], "model_type", ], "model_has_permissions_permission_model_type_primary");
             }
         });
 
@@ -123,26 +129,26 @@ class CreateRolesPermissionsTable extends Migration
             else if ($keytype == "string") $table->uuid($columnNames["model_morph_key"]);
 
             $table->index([ $columnNames["model_morph_key"], "model_type", ], "model_has_roles_model_id_model_type_index");
-            $table->foreignUuid(PermissionRegistrar::$pivotRole)->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid($this->registrar->pivotRole)->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
 
             if ($teams) {
 
                 $table->unsignedBigInteger($columnNames["team_foreign_key"]);
                 $table->index($columnNames["team_foreign_key"], "model_has_roles_team_foreign_key_index");
-                $table->primary([ $columnNames["team_foreign_key"], PermissionRegistrar::$pivotRole, $columnNames["model_morph_key"], "model_type", ], "model_has_roles_role_model_type_primary");
+                $table->primary([ $columnNames["team_foreign_key"], $this->registrar->pivotRole, $columnNames["model_morph_key"], "model_type", ], "model_has_roles_role_model_type_primary");
 
             } else {
 
-                $table->primary([ PermissionRegistrar::$pivotRole, $columnNames["model_morph_key"], "model_type", ], "model_has_roles_role_model_type_primary");
+                $table->primary([ $this->registrar->pivotRole, $columnNames["model_morph_key"], "model_type", ], "model_has_roles_role_model_type_primary");
             }
         });
 
         Schema::create($tableNames["role_has_permissions"], function (Blueprint $table) use ($keytype, $tableNames) {
 
-            $table->foreignUuid(PermissionRegistrar::$pivotPermission, "acl_role_has_permissions_permission_id_foreign")->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
-            $table->foreignUuid(PermissionRegistrar::$pivotRole, "acl_role_has_permissions_role_id_foreign")->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid($this->registrar->pivotPermission, "acl_role_has_permissions_permission_id_foreign")->references("id")->on($tableNames["permissions"])->onUpdate("cascade")->onDelete("cascade");
+            $table->foreignUuid($this->registrar->pivotRole, "acl_role_has_permissions_role_id_foreign")->references("id")->on($tableNames["roles"])->onUpdate("cascade")->onDelete("cascade");
 
-            $table->primary([ PermissionRegistrar::$pivotPermission, PermissionRegistrar::$pivotRole, ], "role_has_permissions_permission_id_role_id_primary");
+            $table->primary([ $this->registrar->pivotPermission, $this->registrar->pivotRole, ], "role_has_permissions_permission_id_role_id_primary");
         });
 
         app("cache")->store(config("permission.cache.store") != "default" ? config("permission.cache.store") : null)->forget(config("permission.cache.key"));
