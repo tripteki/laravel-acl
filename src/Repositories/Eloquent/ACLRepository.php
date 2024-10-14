@@ -6,6 +6,7 @@ use Error;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Tripteki\Repository\AbstractRepository;
+use Tripteki\ACL\Scopes\OwnScope;
 use Tripteki\ACL\Events\Granting;
 use Tripteki\ACL\Events\Granted;
 use Tripteki\ACL\Events\Revoking;
@@ -198,8 +199,24 @@ class ACLRepository extends AbstractRepository implements IACLRepository
      * @param int|string $target
      * @return \Illuminate\Support\Collection
      */
-    public function owns($resource = "%", $target = "%")
+    public function owns($resource = "*", $target = "*")
     {
-        return $resource === "%" ? $this->user->getDirectPermissions() : $this->user->getDirectPermissions()->whereLike("name", iacl($resource, "%", $target));
+        $acls = $this->user->getDirectPermissions()->map(function ($value, $key) {
+
+            $acl = explode(".", $value["name"]);
+
+            return [
+
+                "id" => $acl[2],
+                "type" => $acl[0],
+                "acls" => explode(",", $acl[1]),
+            ];
+        });
+
+        if ($resource != "*") $acls = $acls->where("type", OwnScope::space(app($resource)));
+
+        if ($target != "*") $acls = $acls->where("id", $target)->first();
+
+        return $acls;
     }
 };
