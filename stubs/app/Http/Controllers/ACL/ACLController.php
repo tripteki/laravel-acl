@@ -29,7 +29,7 @@ class ACLController extends Controller
         $data = [];
         $statecode = 200;
 
-        $data = accesses($request->user());
+        $data = accesses($request->user(), false);
 
         return iresponse($data, $statecode);
     }

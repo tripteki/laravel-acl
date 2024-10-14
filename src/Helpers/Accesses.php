@@ -3,7 +3,6 @@
 use Tripteki\Helpers\Contracts\AuthModelContract;
 use Tripteki\ACL\Contracts\Repository\IACLRepository;
 use Tripteki\ACL\Traits\RolePermissionTrait;
-use Tripteki\ACL\Http\Resources\AccessResource;
 use Illuminate\Support\Facades\Auth;
 
 if (! function_exists("accesses"))
@@ -38,6 +37,6 @@ if (! function_exists("accesses"))
             else $accesses = $repository->permissions()->toArray();
         }
 
-        return AccessResource::collection($accesses)->resolve();
+        return $accesses;
     };
 }
