@@ -2,7 +2,7 @@
 
 namespace Tripteki\ACL\Http\Middleware;
 
-use Spatie\Permission\Middlewares\RoleOrPermissionMiddleware as Middleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware as Middleware;
 
 class RoleOrPermissionMiddleware extends Middleware
 {
